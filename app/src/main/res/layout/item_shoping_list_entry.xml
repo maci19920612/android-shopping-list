@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -15,7 +16,6 @@
 
         <CheckBox
                 android:onCheckedChanged="@{(view, isChecked) -> model.onActiveCheckboxChanged(isChecked)}"
-                android:id="@+id/entryCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"/>
 
@@ -23,16 +23,16 @@
                 android:text="@{model.item.title}"
                 android:textColor="@color/white"
                 tools:text="Alma (2 kg)"
-                android:id="@+id/entryTitleDisplay"
                 android:layout_weight="1"
+                app:strikethrough="@{model.item.active}"
                 android:singleLine="true"
                 android:maxLines="1"
-
                 android:layout_width="0dp"
                 android:gravity="center_vertical|left"
                 android:layout_height="match_parent"/>
 
         <ImageButton
+                android:onClick="@{() -> model.onEditButtonClick()}"
                 android:layout_gravity="center"
                 android:foregroundGravity="center"
                 android:minWidth="40dp"
@@ -42,6 +42,7 @@
                 android:layout_height="match_parent"/>
 
         <ImageButton
+                android:onClick="@{() -> model.onRemoveButtonClick()}"
                 android:layout_gravity="center"
                 android:foregroundGravity="center"
                 android:minWidth="40dp"

@@ -25,18 +25,17 @@ class ListActivity : AppCompatActivity(), IListView{
     }
 
     override fun startEditScreen(item: ShoppingListItem) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        startActivityForResult(EditActivity.newIntent(this, item), REQUEST_CODE_EDIT)
     }
 
     override fun startCreateScreen() {
-
+        startActivityForResult(EditActivity.newIntent(this), REQUEST_CODE_EDIT)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REQUEST_CODE_EDIT && resultCode == Activity.RESULT_OK && data != null){
             val resultItem = EditActivity.getShoppingListItemResult(data) ?: return
-
         }
     }
 

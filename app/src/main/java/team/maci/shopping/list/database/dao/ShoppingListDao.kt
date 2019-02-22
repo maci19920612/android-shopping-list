@@ -14,8 +14,11 @@ interface ShoppingListDao{
     @Query("DELETE FROM shopping_list WHERE inactivatedDate < :threshold AND NOT active")
     fun deleteAllOutdatedEntry(threshold: Date) : Completable
 
+    @Query("SELECT * FROM shopping_list WHERE id = :id")
+    fun getItem(id: Long) : Single<ShoppingListItem>
+
     @Insert
-    fun create(entry: ShoppingListItem) : Completable
+    fun create(entry: ShoppingListItem) : Single<Long>
 
     @Update
     fun update(entry: ShoppingListItem) : Completable

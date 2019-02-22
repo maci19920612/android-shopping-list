@@ -18,8 +18,17 @@
 
         <androidx.recyclerview.widget.RecyclerView
                 app:adapter="@{model.adapter}"
+                android:padding="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:onClick="@{() -> model.onItemAddButtonClick()}"
+                android:src="@drawable/ic_add_black_24dp"
+                android:layout_gravity="right|bottom"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         <FrameLayout
                 android:background="@color/overlay"

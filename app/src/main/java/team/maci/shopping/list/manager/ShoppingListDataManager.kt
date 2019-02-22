@@ -5,26 +5,28 @@ import io.reactivex.Single
 import team.maci.shopping.list.database.dao.ShoppingListDao
 import team.maci.shopping.list.database.entity.ShoppingListItem
 import java.util.*
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ShoppingListDataManager(
+class ShoppingListDataManager @Inject constructor(
     val shoppingListDao: ShoppingListDao
 ){
-    fun save(entry: ShoppingListItem) : Completable{
+    fun save(entry: ShoppingListItem) : Single<ShoppingListItem>{
         //We have to update the widget
         return if(entry.id == 0){
             shoppingListDao
                 .create(entry)
-                .doOnComplete {
+                .doOnSuccess {
                     notifyWidget()
-                }
+                }.flatMap { shoppingListDao.getItem(it) }
 
         }else{
             shoppingListDao.update(entry)
-                .doOnComplete {
+                .doOnComplete{
                     notifyWidget()
                 }
+                .andThen(shoppingListDao.getItem(entry.id.toLong()))
         }
     }
 

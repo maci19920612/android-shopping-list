@@ -1,6 +1,7 @@
 package team.maci.shopping.list.components.edit.viewmodel
 
 import androidx.lifecycle.ViewModel
+import dagger.Lazy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -10,11 +11,11 @@ import javax.inject.Inject
 
 class EditViewModel @Inject constructor(
     private val shoppingListDataManager: ShoppingListDataManager,
-    private val editView: IEditView
+    private val lazyEditView: Lazy<IEditView>
 ) : ViewModel(){
 
 
-    var entry = editView.getShoppingListItemParameter()
+    var entry = lazyEditView.get().getShoppingListItemParameter()
     var loading: Boolean = false
 
     private var saveDisposable: Disposable? = null
@@ -28,7 +29,7 @@ class EditViewModel @Inject constructor(
             .subscribe(
                 {
                     loading = false
-                    editView.close()
+                    lazyEditView.get().close()
                 },
                 {
                     loading = false
