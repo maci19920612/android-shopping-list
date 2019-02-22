@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+                name="model"
+                type="team.maci.shopping.list.components.list.viewmodel.ListViewModel"/>
+
+        <import type="android.view.View"/>
+    </data>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                app:adapter="@{model.adapter}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <FrameLayout
+                android:background="@color/overlay"
+                android:clickable="true"
+                android:visibility="@{model.loading ? View.VISIBLE : View.GONE}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="KeyboardInaccessibleWidget">
+
+            <ProgressBar
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+    </FrameLayout>
+</layout>
