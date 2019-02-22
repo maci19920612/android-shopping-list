@@ -10,8 +10,18 @@ import java.util.*
 @Entity(tableName = "shopping_list")
 data class ShoppingListItem(
     @PrimaryKey
-    val id: Int = 0,
+    val id: Int? = null,
     @ColumnInfo var title: String = "",
     @ColumnInfo var active: Boolean = true,
     @ColumnInfo var inactivatedDate: Date? = null
-) : Serializable
+) : Serializable, Comparable<ShoppingListItem>{
+    override fun compareTo(other: ShoppingListItem): Int {
+        if(other.active == active){
+            return 0
+        }
+        if(active){
+            return -1
+        }
+        return 1
+    }
+}

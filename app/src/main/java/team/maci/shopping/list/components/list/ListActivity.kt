@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import dagger.android.AndroidInjection
 import team.maci.shopping.list.R
 import team.maci.shopping.list.components.edit.EditActivity
 import team.maci.shopping.list.components.list.viewmodel.IListView
 import team.maci.shopping.list.components.list.viewmodel.ListViewModel
 import team.maci.shopping.list.database.entity.ShoppingListItem
+import team.maci.shopping.list.databinding.ActivityListBinding
 import javax.inject.Inject
 
 class ListActivity : AppCompatActivity(), IListView{
@@ -19,9 +21,17 @@ class ListActivity : AppCompatActivity(), IListView{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_list)
         AndroidInjection.inject(this)
 
+        val binding = DataBindingUtil.setContentView<ActivityListBinding>(this, R.layout.activity_list)
+        binding.model = viewModel
+
+        viewModel.onCreate()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
     }
 
     override fun startEditScreen(item: ShoppingListItem) {
@@ -36,6 +46,7 @@ class ListActivity : AppCompatActivity(), IListView{
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REQUEST_CODE_EDIT && resultCode == Activity.RESULT_OK && data != null){
             val resultItem = EditActivity.getShoppingListItemResult(data) ?: return
+            viewModel.onEditResult(resultItem)
         }
     }
 

@@ -29,7 +29,8 @@
                     android:layout_height="wrap_content"/>
 
             <EditText
-                    android:text="@={model.entry.title}"
+                    android:padding="8dp"
+                    android:text="@={model.entryTitle}"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:background="@drawable/bg_rounded_white"
@@ -37,7 +38,7 @@
                     />
 
             <Button
-                    android:enabled="@{model.entry.title.length() > 0}"
+                    android:enabled="@{model.entryTitle.length() > 0}"
                     android:onClick="@{() -> model.onSaveButtonClicked()}"
                     android:background="@drawable/bg_rounded_dark_blue"
                     android:textColor="@color/white"

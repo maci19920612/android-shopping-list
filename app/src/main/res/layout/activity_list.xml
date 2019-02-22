@@ -13,10 +13,11 @@
     </data>
 
     <FrameLayout
+            android:background="@color/light_blue"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <team.maci.shopping.list.widget.VerticalRecyclerView
                 app:adapter="@{model.adapter}"
                 android:padding="16dp"
                 android:layout_width="match_parent"
@@ -27,6 +28,7 @@
                 android:src="@drawable/ic_add_black_24dp"
                 android:layout_gravity="right|bottom"
                 android:layout_margin="16dp"
+                app:backgroundTint="@color/dark_blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

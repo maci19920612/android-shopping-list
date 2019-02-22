@@ -14,7 +14,7 @@ class ShoppingListDataManager @Inject constructor(
 ){
     fun save(entry: ShoppingListItem) : Single<ShoppingListItem>{
         //We have to update the widget
-        return if(entry.id == 0){
+        return if(entry.id == null){
             shoppingListDao
                 .create(entry)
                 .doOnSuccess {
@@ -22,6 +22,11 @@ class ShoppingListDataManager @Inject constructor(
                 }.flatMap { shoppingListDao.getItem(it) }
 
         }else{
+            if(!entry.active){
+                entry.inactivatedDate = Date()
+            }else{
+                entry.inactivatedDate = null
+            }
             shoppingListDao.update(entry)
                 .doOnComplete{
                     notifyWidget()

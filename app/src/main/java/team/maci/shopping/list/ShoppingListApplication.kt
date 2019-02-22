@@ -2,6 +2,7 @@ package team.maci.shopping.list
 
 import android.app.Activity
 import android.app.Application
+import com.facebook.stetho.Stetho
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -10,7 +11,7 @@ import team.maci.shopping.list.di.DaggerAppComponent
 import timber.log.Timber
 import javax.inject.Inject
 
-class ShoppingListApplication : Application(), HasActivityInjector{
+class ShoppingListApplication : Application(), HasActivityInjector {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
@@ -23,8 +24,9 @@ class ShoppingListApplication : Application(), HasActivityInjector{
         component.inject(this)
         ComponentContainer.init(component)
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            Stetho.initializeWithDefaults(this);
         }
     }
 

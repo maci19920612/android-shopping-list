@@ -1,5 +1,6 @@
 package team.maci.shopping.list.components.edit.viewmodel
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import dagger.Lazy
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,23 +17,26 @@ class EditViewModel @Inject constructor(
 
 
     var entry = lazyEditView.get().getShoppingListItemParameter()
-    var loading: Boolean = false
+    var loading = ObservableField(false)
+    var entryTitle = ObservableField(entry.title)
 
     private var saveDisposable: Disposable? = null
 
     fun onSaveButtonClicked(){
-        loading = true
+        loading.set(true)
+        entry.title = entryTitle.get()!!
         saveDisposable = shoppingListDataManager
             .save(entry)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    loading = false
+                    entry = it
+                    loading.set(false)
                     lazyEditView.get().close()
                 },
                 {
-                    loading = false
+                    loading.set(false)
                     Timber.e(it, "Error happened when we try to save the shopping list entry")
                 }
             )

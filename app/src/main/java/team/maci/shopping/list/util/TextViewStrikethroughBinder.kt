@@ -4,7 +4,9 @@ import android.graphics.Paint
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 
+
 object TextViewStrikethroughBinder{
+    @JvmStatic
     @BindingAdapter("strikethrough")
     fun bindStriketrough(target: TextView, isStrikethroughSpan: Boolean){
         if(isStrikethroughSpan){

@@ -9,8 +9,11 @@ import team.maci.shopping.list.components.list.di.ListModule
 
 @Module
 abstract class ActivityModule{
+    @ActivityScope
     @ContributesAndroidInjector(modules=[ListModule::class])
     abstract fun bindListActivity() : ListActivity
+
+    @ActivityScope
     @ContributesAndroidInjector(modules = [EditModule::class])
     abstract fun bindEditActivity() : EditActivity
 

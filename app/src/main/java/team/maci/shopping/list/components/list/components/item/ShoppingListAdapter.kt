@@ -9,10 +9,12 @@ import team.maci.shopping.list.R
 import team.maci.shopping.list.components.list.components.item.viewmodel.ListItemViewModel
 import team.maci.shopping.list.components.list.viewmodel.ListViewModel
 import team.maci.shopping.list.database.entity.ShoppingListItem
+import team.maci.shopping.list.di.ActivityScope
 import timber.log.Timber
 import javax.inject.Inject
 
 
+@ActivityScope
 class ShoppingListAdapter @Inject constructor(
     val lazyListViewModel: Lazy<ListViewModel>
 ) : RecyclerView.Adapter<ShoppingListViewHolder>() {
@@ -30,7 +32,7 @@ class ShoppingListAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
         val model = items[position]
-        holder.viewModel.item = model
+        holder.viewModel.setItem(model)
         holder.binding.model = holder.viewModel
         holder.binding.executePendingBindings()
     }
@@ -40,8 +42,6 @@ class ShoppingListAdapter @Inject constructor(
         if (targetIndex >= 0) {
             items.removeAt(targetIndex)
             notifyItemRemoved(targetIndex)
-        }else{
-            Timber.e("Item not found: $item")
         }
     }
 
@@ -49,12 +49,19 @@ class ShoppingListAdapter @Inject constructor(
         val targetIndex = items.indexOfFirst { it.id == item.id }
         if(targetIndex >= 0){
             items[targetIndex] = item
-            notifyItemChanged(targetIndex)
+        }else{
+            items.add(item)
         }
+
+        this.items.sort()
+        notifyDataSetChanged()
     }
 
     fun setItems(items: List<ShoppingListItem>){
         this.items.clear()
         this.items.addAll(items)
+        this.items.sort()
+
+        notifyDataSetChanged()
     }
 }
