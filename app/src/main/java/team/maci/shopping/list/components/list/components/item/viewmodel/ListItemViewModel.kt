@@ -17,6 +17,7 @@ class ListItemViewModel(
 
     val itemTitle = ObservableField("")
     val itemActive = ObservableField(false)
+    val itemIsDelimiter = ObservableField(false)
 
     init {
         itemActive.addOnPropertyChangedCallback(activePropertyWatcher)
@@ -32,6 +33,7 @@ class ListItemViewModel(
         this.item = item
         itemTitle.set(item.title)
         itemActive.set(item.active)
+        itemIsDelimiter.set(item.delimiter)
         activePropertyWatcher.enabled = true
     }
 

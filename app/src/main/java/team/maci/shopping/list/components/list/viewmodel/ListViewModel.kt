@@ -16,7 +16,7 @@ import javax.inject.Inject
 @ActivityScope
 class ListViewModel @Inject constructor(
     val adapter: ShoppingListAdapter,
-    private val shoppingListDataManager: ShoppingListDataManager,
+    private val dataManager: ShoppingListDataManager,
     private val lazyView: Lazy<IListView>
 
 ) : ViewModel() {
@@ -28,7 +28,7 @@ class ListViewModel @Inject constructor(
 
     fun itemRemove(item: ShoppingListItem) {
         loading.set(true)
-        removeDisposable = shoppingListDataManager
+        removeDisposable = dataManager
             .remove(item)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -49,7 +49,7 @@ class ListViewModel @Inject constructor(
 
 
     fun onCreate() {
-        listDisposable = shoppingListDataManager
+        listDisposable = dataManager
             .getShoppingListItems()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -69,7 +69,7 @@ class ListViewModel @Inject constructor(
     }
 
     fun activeItemChanged(item: ShoppingListItem) {
-        updateDisposable = shoppingListDataManager
+        updateDisposable = dataManager
             .save(item)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -90,10 +90,28 @@ class ListViewModel @Inject constructor(
         return true
     }
 
-    fun itemMoveFinished(){}
+    fun itemMoveFinished(){
+        val items = adapter.getItems()
+        dataManager
+            .updateMultipleItems(*items)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    //Ignored
+                    Timber.d("Order save completed")
+                }, {
+                    Timber.e(it, "Error while we try to save the order")
+                }
+            )
+    }
 
     fun onItemAddButtonClick() {
-        lazyView.get().startCreateScreen()
+        lazyView.get().startItemCreateScreen()
+    }
+
+    fun onDelimiterAddButtonClick(){
+        lazyView.get().startDelimiterCreateScreen()
     }
 
     fun onEditResult(item: ShoppingListItem) {

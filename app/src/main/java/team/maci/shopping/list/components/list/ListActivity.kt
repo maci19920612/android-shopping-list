@@ -43,8 +43,15 @@ class ListActivity : AppCompatActivity(), IListView{
         startActivityForResult(EditActivity.newIntent(this, item), REQUEST_CODE_EDIT)
     }
 
-    override fun startCreateScreen() {
+    override fun startItemCreateScreen() {
         startActivityForResult(EditActivity.newIntent(this), REQUEST_CODE_EDIT)
+    }
+
+    override fun startDelimiterCreateScreen() {
+        startActivityForResult(EditActivity.newIntent(
+            context = this,
+            isDelimiter = true
+        ), REQUEST_CODE_EDIT)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

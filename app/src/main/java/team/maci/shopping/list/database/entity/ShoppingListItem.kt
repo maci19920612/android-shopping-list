@@ -14,7 +14,8 @@ data class ShoppingListItem(
     @ColumnInfo var title: String = "",
     @ColumnInfo var active: Boolean = true,
     @ColumnInfo var inactivatedDate: Date? = null,
-    @ColumnInfo var order: Int = 0
+    @ColumnInfo var order: Int = 0,
+    @ColumnInfo var delimiter: Boolean = false
 ) : Serializable, Comparable<ShoppingListItem> {
     override fun compareTo(other: ShoppingListItem): Int {
         if (order == 0 || other.order == 0) {
@@ -28,6 +29,6 @@ data class ShoppingListItem(
             return 1
         }
 
-        return other.order - order
+        return order - other.order
     }
 }

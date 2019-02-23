@@ -10,16 +10,16 @@ import javax.inject.Singleton
 
 @Singleton
 class ShoppingListDataManager @Inject constructor(
-    val shoppingListDao: ShoppingListDao
+    val dao: ShoppingListDao
 ){
     fun save(entry: ShoppingListItem) : Single<ShoppingListItem>{
         //We have to update the widget
         return if(entry.id == null){
-            shoppingListDao
+            dao
                 .create(entry)
                 .doOnSuccess {
                     notifyWidget()
-                }.flatMap { shoppingListDao.getItem(it) }
+                }.flatMap { dao.getItem(it) }
 
         }else{
             if(!entry.active){
@@ -27,16 +27,16 @@ class ShoppingListDataManager @Inject constructor(
             }else{
                 entry.inactivatedDate = null
             }
-            shoppingListDao.update(entry)
+            dao.update(entry)
                 .doOnComplete{
                     notifyWidget()
                 }
-                .andThen(shoppingListDao.getItem(entry.id.toLong()))
+                .andThen(dao.getItem(entry.id.toLong()))
         }
     }
 
     fun remove(entry: ShoppingListItem) : Completable{
-        return shoppingListDao
+        return dao
             .remove(entry)
             .doOnComplete {
                 notifyWidget()
@@ -44,19 +44,21 @@ class ShoppingListDataManager @Inject constructor(
     }
 
     fun getShoppingListItems() : Single<List<ShoppingListItem>>{
-        return shoppingListDao.getAllEntries()
+        return dao.getAllEntries()
     }
 
     fun removeInactiveItems() : Completable{
         val targetTimestamp = Date().time - 1000 * 60 * 60 * 24
-        return shoppingListDao
+        return dao
             .deleteAllOutdatedEntry(Date(targetTimestamp))
             .doOnComplete {
                 notifyWidget()
             }
     }
 
-    fun updateMultipleItems(vararg item: ShoppingListItem){}
+    fun updateMultipleItems(vararg items: ShoppingListItem) : Completable{
+        return Completable.merge(items.map { dao.update(it) })
+    }
 
     private fun notifyWidget(){
         //TODO: Update widget

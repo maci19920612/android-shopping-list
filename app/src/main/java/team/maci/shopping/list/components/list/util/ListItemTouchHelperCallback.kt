@@ -35,17 +35,10 @@ class ListItemTouchHelperCallback @Inject constructor(
         return false
     }
 
-    override fun onMoved(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        fromPos: Int,
-        target: RecyclerView.ViewHolder,
-        toPos: Int,
-        x: Int,
-        y: Int
-    ) {
-        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        viewModel.itemMoveFinished()
+        Timber.d("clearView called")
     }
-
 
 }

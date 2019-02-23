@@ -39,17 +39,22 @@ class EditActivity : AppCompatActivity(), IEditView {
     }
 
     override fun getShoppingListItemParameter(): ShoppingListItem {
-        return intent.getSerializableExtra(PARAM_SHOPPING_LIST_ITEM) as? ShoppingListItem ?: ShoppingListItem()
+        val delimiter = intent.getBooleanExtra(PARAM_DELIMITER, false)
+        return intent.getSerializableExtra(PARAM_SHOPPING_LIST_ITEM) as? ShoppingListItem ?: ShoppingListItem(
+            delimiter = delimiter
+        )
     }
 
     companion object{
         private val PARAM_SHOPPING_LIST_ITEM = "Param.ShoppingListItem"
+        private val PARAM_DELIMITER = "Param.Delimiter"
 
-        fun newIntent(context: Context, shoppingListItem: ShoppingListItem? = null) : Intent{
+        fun newIntent(context: Context, shoppingListItem: ShoppingListItem? = null, isDelimiter: Boolean = false) : Intent{
             val ret = Intent(context, EditActivity::class.java)
             if(shoppingListItem != null){
                 ret.putExtra(PARAM_SHOPPING_LIST_ITEM, shoppingListItem)
             }
+            ret.putExtra(PARAM_DELIMITER, isDelimiter)
             return ret
         }
 

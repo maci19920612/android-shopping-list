@@ -5,5 +5,6 @@ import team.maci.shopping.list.database.entity.ShoppingListItem
 interface IListView{
     fun startEditScreen(item: ShoppingListItem)
 
-    fun startCreateScreen()
+    fun startItemCreateScreen()
+    fun startDelimiterCreateScreen()
 }
