@@ -18,6 +18,7 @@
             android:layout_height="match_parent">
 
         <team.maci.shopping.list.widget.VerticalRecyclerView
+                android:id="@+id/shoppingList"
                 app:adapter="@{model.adapter}"
                 android:padding="16dp"
                 android:layout_width="match_parent"

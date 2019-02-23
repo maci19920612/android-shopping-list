@@ -12,7 +12,6 @@ import team.maci.shopping.list.di.ActivityScope
 import team.maci.shopping.list.manager.ShoppingListDataManager
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @ActivityScope
 class ListViewModel @Inject constructor(
@@ -23,8 +22,8 @@ class ListViewModel @Inject constructor(
 ) : ViewModel() {
     var loading = ObservableField(false)
     private var removeDisposable: Disposable? = null
-    private var listDisposable : Disposable? = null
-    private var updateDisposable : Disposable? = null
+    private var listDisposable: Disposable? = null
+    private var updateDisposable: Disposable? = null
 
 
     fun itemRemove(item: ShoppingListItem) {
@@ -44,30 +43,20 @@ class ListViewModel @Inject constructor(
             )
     }
 
-    fun itemEdit(item: ShoppingListItem){
+    fun itemEdit(item: ShoppingListItem) {
         lazyView.get().startEditScreen(item)
     }
 
-    fun onItemAddButtonClick(){
-        lazyView.get().startCreateScreen()
-    }
 
-    fun onEditResult(item: ShoppingListItem){
-        adapter.updateItem(item)
-    }
-
-    fun onCreate(){
-        //loading.set(true)
+    fun onCreate() {
         listDisposable = shoppingListDataManager
             .getShoppingListItems()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    loading.set(false)
                     adapter.setItems(it)
                 }, {
-                    loading.set(false)
                     Timber.e(it, "Error while we try to list the shopping list items")
                 }
             )
@@ -80,22 +69,34 @@ class ListViewModel @Inject constructor(
     }
 
     fun activeItemChanged(item: ShoppingListItem) {
-        loading.set(true)
         updateDisposable = shoppingListDataManager
             .save(item)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    loading.set(false)
                     adapter.updateItem(item)
                 },
                 {
-                    loading.set(false)
                     item.active = !item.active
                     adapter.updateItem(item)
                     Timber.e(it, "Error while we try to update a shopping list item")
                 }
             )
+    }
+
+    fun itemMoved(originalPosition: Int, targetPosition: Int): Boolean {
+        adapter.moveItemTo(originalPosition, targetPosition)
+        return true
+    }
+
+    fun itemMoveFinished(){}
+
+    fun onItemAddButtonClick() {
+        lazyView.get().startCreateScreen()
+    }
+
+    fun onEditResult(item: ShoppingListItem) {
+        adapter.updateItem(item)
     }
 }

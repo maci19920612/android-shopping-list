@@ -12,7 +12,10 @@ class AppModule{
 
     @Provides
     fun provideDatabase(app: Application) : Database{
-        return Room.databaseBuilder(app,Database::class.java, "shopping-list").build()
+        return Room
+            .databaseBuilder(app,Database::class.java, "shopping-list")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

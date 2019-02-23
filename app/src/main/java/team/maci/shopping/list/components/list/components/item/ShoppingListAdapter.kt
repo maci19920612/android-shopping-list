@@ -3,6 +3,7 @@ package team.maci.shopping.list.components.list.components.item
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dagger.Lazy
 import team.maci.shopping.list.R
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @ActivityScope
 class ShoppingListAdapter @Inject constructor(
-    val lazyListViewModel: Lazy<ListViewModel>
+    private val lazyListViewModel: Lazy<ListViewModel>,
+    private val itemTouchHelper: Lazy<ItemTouchHelper>
 ) : RecyclerView.Adapter<ShoppingListViewHolder>() {
     private val items: MutableList<ShoppingListItem> = arrayListOf()
 
@@ -25,7 +27,12 @@ class ShoppingListAdapter @Inject constructor(
         val binding: team.maci.shopping.list.databinding.ItemShopingListEntryBinding =
             DataBindingUtil.inflate(inflater, R.layout.item_shoping_list_entry, parent, false)
         val viewModel = ListItemViewModel(lazyListViewModel.get())
-        return ShoppingListViewHolder(binding.root, binding, viewModel)
+        val viewHolder = ShoppingListViewHolder(binding.root, binding, viewModel)
+        viewModel.setDragListener {
+            Timber.d("Invoke drag listener, viewHolder: $viewHolder")
+            itemTouchHelper.get().startDrag(viewHolder)
+        }
+        return viewHolder
     }
 
     override fun getItemCount(): Int = items.size
@@ -47,9 +54,9 @@ class ShoppingListAdapter @Inject constructor(
 
     fun updateItem(item: ShoppingListItem) {
         val targetIndex = items.indexOfFirst { it.id == item.id }
-        if(targetIndex >= 0){
+        if (targetIndex >= 0) {
             items[targetIndex] = item
-        }else{
+        } else {
             items.add(item)
         }
 
@@ -57,11 +64,36 @@ class ShoppingListAdapter @Inject constructor(
         notifyDataSetChanged()
     }
 
-    fun setItems(items: List<ShoppingListItem>){
+    fun setItems(items: List<ShoppingListItem>) {
         this.items.clear()
         this.items.addAll(items)
         this.items.sort()
 
         notifyDataSetChanged()
+    }
+
+    fun moveItemTo(originalPosition: Int, targetPosition: Int) {
+        val originalItem = items[originalPosition]
+        if(originalPosition < targetPosition){
+            for(i in originalPosition + 1..targetPosition){
+                items[i - 1] = items[i]
+            }
+        }else if(originalPosition > targetPosition){
+            for(i in originalPosition - 1 downTo targetPosition){
+                items[i + 1] = items[i]
+            }
+        }
+        items[targetPosition] = originalItem
+
+        //Update all items order
+        for(i in 0 until items.size){
+            items[i].order = i + 1
+        }
+
+        notifyItemMoved(originalPosition, targetPosition)
+    }
+
+    fun getItems() : Array<ShoppingListItem>{
+        return items.toTypedArray()
     }
 }

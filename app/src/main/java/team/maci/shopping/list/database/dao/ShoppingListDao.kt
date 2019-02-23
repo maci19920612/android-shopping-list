@@ -23,6 +23,9 @@ interface ShoppingListDao{
     @Update
     fun update(entry: ShoppingListItem) : Completable
 
+    @Update
+    fun update(vararg entry: ShoppingListItem) : Completable
+
     @Delete
     fun remove(entry: ShoppingListItem) : Completable
 }

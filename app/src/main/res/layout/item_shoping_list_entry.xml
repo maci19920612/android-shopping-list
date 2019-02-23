@@ -4,7 +4,13 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="team.maci.shopping.list.components.list.components.item.viewmodel.ListItemViewModel" />
+
+        <variable
+                name="model"
+                type="team.maci.shopping.list.components.list.components.item.viewmodel.ListItemViewModel"/>
+
+        <import type="team.maci.shopping.list.util.TouchListenerWrapper" />
+        <import type="android.view.MotionEvent" />
     </data>
 
     <LinearLayout
@@ -15,6 +21,7 @@
             android:layout_height="40dp">
 
         <CheckBox
+                android:button="@drawable/selector_bg_checkbox"
                 android:textColorSecondary="@color/white"
                 android:checked="@={!model.itemActive}"
                 android:layout_width="wrap_content"
@@ -52,6 +59,16 @@
                 android:src="@drawable/ic_delete_forever_black_24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"/>
+
+        <ImageButton
+                app:onTouch="@{(source, motionEvent) -> motionEvent.action == MotionEvent.ACTION_DOWN ? model.onDragReorderButtonClick() : false}"
+                android:background="@null"
+                android:src="@drawable/ic_menu_black_24dp"
+                android:layout_width="wrap_content"
+                android:minWidth="40dp"
+                android:layout_gravity="center"
+                android:layout_height="match_parent"
+                />
 
     </LinearLayout>
 </layout>

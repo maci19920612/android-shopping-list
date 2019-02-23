@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 @BindingMethods(value = [
     BindingMethod(
         type = RecyclerView::class,
-        attribute = "app:adapter",
+        attribute = "adapter",
         method = "setAdapter"
     )
 ])

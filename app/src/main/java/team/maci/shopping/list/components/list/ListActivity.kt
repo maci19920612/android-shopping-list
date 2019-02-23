@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.android.AndroidInjection
 import team.maci.shopping.list.R
 import team.maci.shopping.list.components.edit.EditActivity
@@ -18,6 +19,8 @@ class ListActivity : AppCompatActivity(), IListView{
 
     @Inject
     lateinit var viewModel: ListViewModel
+    @Inject
+    lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +28,8 @@ class ListActivity : AppCompatActivity(), IListView{
 
         val binding = DataBindingUtil.setContentView<ActivityListBinding>(this, R.layout.activity_list)
         binding.model = viewModel
+
+        itemTouchHelper.attachToRecyclerView(binding.shoppingList)
 
         viewModel.onCreate()
     }

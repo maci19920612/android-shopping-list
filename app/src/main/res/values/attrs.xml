@@ -5,5 +5,7 @@
     </declare-styleable>
 
     <attr name="strikethrough" format="boolean"/>
+    <attr name="onTouchActionDown" />
+    <attr name="onTouchActionUp" />
 
 </resources>

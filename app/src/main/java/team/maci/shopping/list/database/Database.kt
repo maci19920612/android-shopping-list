@@ -8,7 +8,7 @@ import team.maci.shopping.list.database.dao.ShoppingListDao
 import team.maci.shopping.list.database.entity.ShoppingListItem
 
 
-@Database(entities = [ShoppingListItem::class], version = 1, exportSchema = false)
+@Database(entities = [ShoppingListItem::class], version = 2, exportSchema = false)
 @TypeConverters(DateTypeConverter::class)
 abstract class Database : RoomDatabase(){
     abstract fun getShoppingListDao() : ShoppingListDao

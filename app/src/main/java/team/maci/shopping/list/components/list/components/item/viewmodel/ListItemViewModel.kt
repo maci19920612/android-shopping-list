@@ -10,6 +10,7 @@ class ListItemViewModel(
     private val parentViewModel: ListViewModel
 ): ViewModel(){
     private var item: ShoppingListItem? = null
+    private var dragListener: (() -> Unit)? = null
     private var activePropertyWatcher = PropertyWatcher {
         onActiveCheckboxChanged(itemActive.get() ?: false)
     }
@@ -20,6 +21,11 @@ class ListItemViewModel(
     init {
         itemActive.addOnPropertyChangedCallback(activePropertyWatcher)
     }
+
+    fun setDragListener(dragListener: () -> Unit){
+        this.dragListener = dragListener
+    }
+
 
     fun setItem(item: ShoppingListItem){
         activePropertyWatcher.enabled = false
@@ -43,6 +49,11 @@ class ListItemViewModel(
         val item = item ?: return
         item.active = active
         parentViewModel.activeItemChanged(item)
+    }
+
+    fun onDragReorderButtonClick() : Boolean{
+        dragListener?.invoke()
+        return false
     }
 }
 

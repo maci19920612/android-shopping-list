@@ -56,6 +56,8 @@ class ShoppingListDataManager @Inject constructor(
             }
     }
 
+    fun updateMultipleItems(vararg item: ShoppingListItem){}
+
     private fun notifyWidget(){
         //TODO: Update widget
     }

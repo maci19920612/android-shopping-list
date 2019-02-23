@@ -13,15 +13,21 @@ data class ShoppingListItem(
     val id: Int? = null,
     @ColumnInfo var title: String = "",
     @ColumnInfo var active: Boolean = true,
-    @ColumnInfo var inactivatedDate: Date? = null
-) : Serializable, Comparable<ShoppingListItem>{
+    @ColumnInfo var inactivatedDate: Date? = null,
+    @ColumnInfo var order: Int = 0
+) : Serializable, Comparable<ShoppingListItem> {
     override fun compareTo(other: ShoppingListItem): Int {
-        if(other.active == active){
-            return 0
+        if (order == 0 || other.order == 0) {
+            if (other.active == active) {
+                return 0
+            }
+            if (active) {
+                return -1
+            }
+
+            return 1
         }
-        if(active){
-            return -1
-        }
-        return 1
+
+        return other.order - order
     }
 }

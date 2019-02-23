@@ -1,12 +1,17 @@
 package team.maci.shopping.list.components.list.di
 
-import dagger.Binds
+import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.Module
-import team.maci.shopping.list.components.list.ListActivity
-import team.maci.shopping.list.components.list.viewmodel.IListView
+import dagger.Provides
+import team.maci.shopping.list.components.list.util.ListItemTouchHelperCallback
+import team.maci.shopping.list.di.ActivityScope
 
 @Module
-abstract class ListModule{
-    @Binds
-    abstract fun bindView(listActivity: ListActivity) : IListView
+class ListModule {
+
+    @ActivityScope
+    @Provides
+    fun provideItemTouchHelper(
+        listItemTouchHelperCallback: ListItemTouchHelperCallback
+    ) = ItemTouchHelper(listItemTouchHelperCallback)
 }
